@@ -137,7 +137,7 @@ const getAllProperties = function (options, limit = 10) {
 	if (options.owner_id) {
 		queryParams.push(options.owner_id);
 		queryString += queryParams.length > 1 ? "AND" : "WHERE";
-		queryString += `properties.owner_id = $${queryParams.length}`;
+		queryString += ` properties.owner_id = $${queryParams.length} `;
 	}
 
 	// if a minimum_price_per_night and a maximum_price_per_night, only return properties within that price range (same with only minimum price or maximum price)
@@ -191,9 +191,62 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function (property) {
-	const propertyId = Object.keys(properties).length + 1;
-	property.id = propertyId;
-	properties[propertyId] = property;
-	return Promise.resolve(property);
+	const {
+		owner_id,
+		title,
+		description,
+		thumbnail_photo_url,
+		cover_photo_url,
+		cost_per_night,
+		street,
+		city,
+		province,
+		post_code,
+		country,
+		parking_spaces,
+		number_of_bathrooms,
+		number_of_bedrooms,
+	} = property;
+
+	return pool
+		.query(
+			`INSERT INTO properties ( owner_id,
+            title,
+            description,
+            thumbnail_photo_url,
+            cover_photo_url,
+            cost_per_night,
+            street,
+            city,
+            province,
+            post_code,
+            country,
+            parking_spaces,
+            number_of_bathrooms,
+            number_of_bedrooms) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *;`,
+			[
+				owner_id,
+				title,
+				description,
+				thumbnail_photo_url,
+				cover_photo_url,
+				cost_per_night,
+				street,
+				city,
+				province,
+				post_code,
+				country,
+				parking_spaces,
+				number_of_bathrooms,
+				number_of_bedrooms,
+			]
+		)
+		.then((result) => {
+			console.log(result.rows); // gets object {} of result info and not array of obj [{}]
+			return result.rows;
+		})
+		.catch((err) => {
+			console.log(err.message);
+		});
 };
 exports.addProperty = addProperty;

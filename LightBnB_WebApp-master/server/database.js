@@ -9,7 +9,7 @@ const pool = new Pool({
     database: 'lightbnb'
 });
   
-pool.query(`SELECT title FROM properties LIMIT 10;`).then(response => {console.log(response)})
+// pool.query(`SELECT title FROM properties LIMIT 10;`).then(response => {console.log(response)})
 
 /// Users
 
@@ -19,16 +19,16 @@ pool.query(`SELECT title FROM properties LIMIT 10;`).then(response => {console.l
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function(email) {
-  let user;
-  for (const userId in users) {
-    user = users[userId];
-    if (user.email.toLowerCase() === email.toLowerCase()) {
-      break;
-    } else {
-      user = null;
-    }
-  }
-  return Promise.resolve(user);
+    return pool
+    .query(`SELECT * FROM users WHERE users.email = $1`, [email])
+    .then((user) => {
+        console.log(user.rows[0]); // gets object {} of user info and not array of obj [{}]
+        return user.rows[0];
+    })
+    .catch((err) => {
+        console.log(err.message);
+        return null;
+    });
 }
 exports.getUserWithEmail = getUserWithEmail;
 
@@ -38,7 +38,16 @@ exports.getUserWithEmail = getUserWithEmail;
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function(id) {
-  return Promise.resolve(users[id]);
+    return pool
+    .query(`SELECT * FROM users WHERE users.id = $1`, [id])
+    .then((user) => {
+        console.log(user.rows[0]); // gets object {} of user info and not array of obj [{}]
+        return user.rows[0];
+    })
+    .catch((err) => {
+        console.log(err.message);
+        return null;
+    });
 }
 exports.getUserWithId = getUserWithId;
 

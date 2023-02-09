@@ -1,3 +1,5 @@
+-- Data created by myself for practice purposes
+
 INSERT INTO users (name, email, PASSWORD)
     VALUES ('Katie Liu', 'k@gmail.com', '$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.
 '), ('Eric Joo', 'j@gmail.com', '$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.

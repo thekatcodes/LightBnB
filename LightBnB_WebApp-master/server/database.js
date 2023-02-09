@@ -62,10 +62,10 @@ const addUser =  function(user) {
 //   user.id = userId;
 //   users[userId] = user;
 //     return Promise.resolve(user);
-    const { name, password, email } = user;
+    const { name, email, password } = user;
 
     return pool
-    .query(`INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;`, [name, password, email])
+    .query(`INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;`, [name, email, password])
     .then((user) => {
         console.log(user.rows); // gets object {} of user info and not array of obj [{}]
         return user.rows;
